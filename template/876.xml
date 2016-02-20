@@ -1,0 +1,68 @@
+	<PageConfiguration><!-- 876  http://env.people.com.cn/n/2015/0722/c1010-27339968.html-->
+			<name>人民网</name>
+			<saver>saver1</saver>
+			<sourceId>876</sourceId>
+			<tableName>T_GEIS_NEWS_PRETREAT</tableName>
+			<language>1</language>
+			<pageEncode>GB2312</pageEncode>
+			<storeList><!--解析需要保存的内容 -->				
+				<storeSection>
+					<selector>
+						<select>
+							<identificationType>query</identificationType>
+							<identificationValue>body</identificationValue>
+						</select>
+					</selector>
+					<lengthJudge></lengthJudge>
+					<storeNode><!-- title -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#p_title</identificationValue>
+							</select>							
+						</selector>
+						<saveTitle>title</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					<storeNode><!-- createdate -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#p_publishtime</identificationValue>	
+								<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
+							</select>
+						</selector>
+						<saveTitle>createdate</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>regex</storePosition>
+						<storePositionValue>\d+年\d+月\d+日</storePositionValue>
+					</storeNode>
+					<storeNode>
+						<selector><!-- tag -->
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#p_navigator > a</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>tag</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>					
+					<storeNode><!-- content -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#p_content > p</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>content</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+				</storeSection>
+				
+				
+			</storeList>						
+		</PageConfiguration>

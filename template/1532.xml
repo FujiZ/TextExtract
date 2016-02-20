@@ -1,0 +1,68 @@
+	<PageConfiguration><!-- 1532  https://www.snl.com/Interactivex/article.aspx?CdId=A-33984569-10535-->
+			<name>SNL</name>
+			<saver>saver1</saver>
+			<sourceId>1532</sourceId>
+			<tableName>T_GEIS_NEWS_PRETREAT</tableName>
+			<language>2</language>
+			<pageEncode>UTF-8</pageEncode>
+			<storeList><!--解析需要保存的内容 -->				
+				<storeSection>
+					<selector>
+						<select>
+							<identificationType>query</identificationType>
+							<identificationValue>body</identificationValue>
+						</select>
+					</selector>
+					<lengthJudge></lengthJudge>
+					<storeNode><!-- title -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>span.tx4XLrg</identificationValue>
+							</select>							
+						</selector>
+						<saveTitle>title</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					<storeNode><!-- createdate -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>span.txSmMed</identificationValue>	
+								<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
+							</select>
+						</selector>
+						<saveTitle>createdate</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>regex</storePosition>
+						<storePositionValue>[a-zA-Z]+ \d+, \d+</storePositionValue>
+					</storeNode>
+					<storeNode>
+						<selector><!-- tag -->
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>span.headline</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>tag</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>					
+					<storeNode><!-- content -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>div.storyTextVariable > p</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>content</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+				</storeSection>
+				
+				
+			</storeList>						
+		</PageConfiguration>

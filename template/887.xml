@@ -1,0 +1,68 @@
+	<PageConfiguration><!-- 887  http://www.chinanews.com/gn/2015/07-22/7421203.shtml-->
+			<name>中国新闻网</name>
+			<saver>saver1</saver>
+			<sourceId>887</sourceId>
+			<tableName>T_GEIS_NEWS_PRETREAT</tableName>
+			<language>1</language>
+			<pageEncode>UTF-8</pageEncode>
+			<storeList><!--解析需要保存的内容 -->				
+				<storeSection>
+					<selector>
+						<select>
+							<identificationType>query</identificationType>
+							<identificationValue>body</identificationValue>
+						</select>
+					</selector>
+					<lengthJudge></lengthJudge>
+					<storeNode><!-- title -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>h1</identificationValue>
+							</select>							
+						</selector>
+						<saveTitle>title</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					<storeNode><!-- createdate -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#cont_1_1_2 > div.left-time > div.left-t</identificationValue>	
+								<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
+							</select>
+						</selector>
+						<saveTitle>createdate</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>regex</storePosition>
+						<storePositionValue>\d+年\d+月\d+日</storePositionValue>
+					</storeNode>
+					<storeNode>
+						<selector><!-- tag -->
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#nav > a</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>tag</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>					
+					<storeNode><!-- content -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>div.left_zw p</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>content</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+				</storeSection>
+				
+			
+			</storeList>						
+		</PageConfiguration>

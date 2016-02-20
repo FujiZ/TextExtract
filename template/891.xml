@@ -1,0 +1,169 @@
+	<PageConfiguration><!-- 891  http://www.dzwww.com/xinwen/shehuixinwen/201507/t20150722_12740071.htm-->
+			<name>大众网</name>
+			<saver>saver1</saver>
+			<sourceId>891</sourceId>
+			<tableName>T_GEIS_NEWS_PRETREAT</tableName>
+			<language>1</language>
+			<pageEncode>UTF-8</pageEncode>
+			<storeList><!--解析需要保存的内容 -->				
+				<storeSection>
+					<selector>
+						<select>
+							<identificationType>query</identificationType>
+							<identificationValue>body</identificationValue>
+						</select>
+					</selector>
+					<lengthJudge></lengthJudge>
+					<storeNode><!-- title -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>h1</identificationValue>
+							</select>							
+						</selector>
+						<saveTitle>title</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					<storeNode><!-- createdate -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#news-con > div.top > p,#infor > div.left > span,#pubtime_baidu</identificationValue>	
+								<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
+							</select>
+						</selector>
+						<saveTitle>createdate</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>regex</storePosition>
+						<storePositionValue>\d+-\d+-\d+</storePositionValue>
+					</storeNode>
+					<storeNode>
+						<selector><!-- tag -->
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>div.add > a</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>tag</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>					
+					<storeNode><!-- content -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>div.TRS_Editor p</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>content</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+				</storeSection>
+				
+				<storeSection>
+					<selector>
+						<select>
+							<identificationType>query</identificationType>
+							<identificationValue>body</identificationValue>
+						</select>
+					</selector>
+					<lengthJudge></lengthJudge>
+					<storeNode><!-- title -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>h1</identificationValue>
+							</select>							
+						</selector>
+						<saveTitle>title</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					<storeNode><!-- createdate -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#news-con > div.top > p,div.left > span,#pubtime_baidu</identificationValue>	
+								<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
+							</select>
+						</selector>
+						<saveTitle>createdate</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>regex</storePosition>
+						<storePositionValue>\d+-\d+-\d+</storePositionValue>
+					</storeNode>
+					<storeNode>
+						<selector><!-- tag -->
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>div.add > a</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>tag</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>					
+					<storeNode><!-- content -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#news-con p</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>content</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+				</storeSection>
+				
+				<storeSection>
+					<selector>
+						<select>
+							<identificationType>query</identificationType>
+							<identificationValue>body</identificationValue>
+						</select>
+					</selector>
+					<lengthJudge></lengthJudge>
+					<storeNode><!-- title -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#wrapper > div.beijingxian > div.zuobian > div.liebiaobox > div > h2</identificationValue>
+							</select>							
+						</selector>
+						<saveTitle>title</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+					<storeNode>
+						<selector><!-- tag -->
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>div.dangqianweizhi > p > a</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>tag</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>					
+					<storeNode><!-- content -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#content span</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>content</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+				</storeSection>
+				
+			</storeList>						
+		</PageConfiguration>

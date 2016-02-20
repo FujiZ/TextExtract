@@ -1,0 +1,68 @@
+	<PageConfiguration><!-- 1086  http://www.telegraph.co.uk/sport/football/teams/arsenal/11778359/Arsenal-players-are-too-obsessed-with-selfies-and-six-packs-to-win-Premier-League-says-Roy-Keane.html-->
+			<name>英国每日电讯报</name>
+			<saver>saver1</saver>
+			<sourceId>1086</sourceId>
+			<tableName>T_GEIS_NEWS_PRETREAT</tableName>
+			<language>2</language>
+			<pageEncode>UTF-8</pageEncode>
+			<storeList><!--解析需要保存的内容 -->				
+				<storeSection>
+					<selector>
+						<select>
+							<identificationType>query</identificationType>
+							<identificationValue>body</identificationValue>
+						</select>
+					</selector>
+					<lengthJudge></lengthJudge>
+					<storeNode><!-- title -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>h1</identificationValue>
+							</select>							
+						</selector>
+						<saveTitle>title</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					<storeNode><!-- createdate -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>p.publishedDate</identificationValue>	
+								<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
+							</select>
+						</selector>
+						<saveTitle>createdate</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>regex</storePosition>
+						<storePositionValue>\d+ [a-zA-Z]+ \d+</storePositionValue>
+					</storeNode>
+					<storeNode>
+						<selector><!-- tag -->
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>#tmglCrumbtrail</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>tag</saveTitle>
+						<sectionAllowNull>yes</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>					
+					<storeNode><!-- content -->
+						<selector>
+							<select>
+								<identificationType>query</identificationType>
+								<identificationValue>div[itemprop="articleBody"] p</identificationValue>
+							</select>
+						</selector>
+						<saveTitle>content</saveTitle>
+						<sectionAllowNull>no</sectionAllowNull>
+						<storePosition>.</storePosition>
+					</storeNode>
+					
+				</storeSection>
+				
+				
+			</storeList>						
+		</PageConfiguration>
