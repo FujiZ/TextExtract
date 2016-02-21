@@ -1,5 +1,5 @@
 <PageConfiguration><!-- 1536 http://www.cae.com/CAE-wins-defence-contracts-valued-at-more-than-C120-million/-->
-	<name>rosatom</name>
+	<name>163</name>
 	<saver>saver1</saver>
 	<sourceId>1536</sourceId>
 	<tableName>T_GEIS_NEWS_PRETREAT</tableName>
@@ -18,10 +18,10 @@
 				<selector>
 					<select>
 						<identificationType>query</identificationType>
-						<identificationValue>div.newsTitle</identificationValue>
+						<identificationValue>#h1title</identificationValue>
 					</select>							
 				</selector>
-				<extractType>.</extractType><!-- 表示要抽取该节点的属性值 -->
+				<extractType>.</extractType><!-- 表示要抽取的内容的类型 -->
 				<saveTitle>title</saveTitle>
 				<sectionAllowNull>no</sectionAllowNull>
 				<storePosition>.</storePosition>
@@ -30,7 +30,7 @@
 				<selector>
 					<select>
 						<identificationType>query</identificationType>
-						<identificationValue>div.dateStamp</identificationValue>	
+						<identificationValue>div.ep-time-soure.cDGray</identificationValue>	
 						<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
 					</select>
 				</selector>
@@ -39,22 +39,11 @@
 				<storePosition>regex</storePosition>
 				<storePositionValue>\d+/\d+/\d+</storePositionValue>
 			</storeNode>
-			<storeNode>
-				<selector><!-- tag -->
-					<select>
-						<identificationType>query</identificationType>
-						<identificationValue>div.list</identificationValue>
-					</select>
-				</selector>
-				<saveTitle>tag</saveTitle>
-				<sectionAllowNull>yes</sectionAllowNull>
-				<storePosition>.</storePosition>
-			</storeNode>					
 			<storeNode><!-- content -->
 				<selector>
 					<select>
 						<identificationType>query</identificationType>
-						<identificationValue>#newsDetailsContainer > p</identificationValue>
+						<identificationValue>#endText > p</identificationValue>
 					</select>
 				</selector>
 				<saveTitle>content</saveTitle>

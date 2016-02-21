@@ -6,36 +6,79 @@ except ImportError:
     import xml.etree.ElementTree as ET
 
 import lxml.etree
+import lxml.html.soupparser
 import utils
+import exceptions
 
 
-class Data(object):
-    def __init__(self):
-        self.__name = None
-        self.__id = None
-        self.__data = {}
+class StoreNode(object):
+    def __init__(self, node):
+        # 获取selector
+        self.__selector = utils.Selector(node.find('selector'))
 
-    def setName(self, name):
-        self.__name = name
+        extractType = node.find('extractType')
+        if extractType:
+            self.__extractType = node.find('extractType').text
+        else:
+            self.__extractType = '.'
 
-    def setId(self, id):
-        self.__id = id
+        self.__title = node.find('saveTitle').text
+        self.__allowNull = node.find('sectionAllowNull').text
 
-    def setData(self, key, value):
-        self.__data[key] = value
+    def extract(self, docNode):
+        elementList = self.__selector.selectNode(docNode)
+        # 如果为.抽取文本，否则抽取对应的属性内容
+        resultList = []
+        if self.__extractType == '.':
+            resultList = [element.text for element in elementList if element.text is not None]
+        else:
+            resultList = [element.attrib[self.__extractType] for element in elementList if
+                          element.attrib[self.__extractType] is not None]
+        # 判断是否允许为空，若不允许则引发一个异常，由section捕捉
+        if not resultList and self.__allowNull == 'no':
+            raise exceptions.NodeNullError
+        return self.__title, resultList
+
+
+class StoreSection(object):
+    def __init__(self, node):
+        # 获取selector
+        self.__selector = utils.Selector(node.find('selector'))
+        self.__storeNodeList = [StoreNode(storeNode) for storeNode in node.findall('storeNode')]
+
+    def extract(self, docNode):
+        elementList = self.__selector.selectNode(docNode)
+        # 通过resultMap存储结果
+        resultMap = {}
+        try:
+            for storeNode in self.__storeNodeList:
+                for element in elementList:
+                    title, resultList = storeNode.extract(element)
+                    if title in resultMap:
+                        resultMap[title] += resultList
+                    else:
+                        resultMap[title] = resultList
+        except exceptions.NodeNullError:
+            return False
+        return resultMap
 
 
 class Extractor(utils.Dispatcher):
     def __init__(self, template):
-        self.__template = ET.ElementTree(file=template)
-        self.__html = None
-        self.__data = Data()
+        self.__template = ET.ElementTree(file=template).getroot()
+        self.__storeSectionList = None
+        self.__data = utils.Data()
+        for child in self.__template:
+            self.dispatch('parse', child.tag, node=child)
 
     def extract(self, filename):
-        self.__html = lxml.etree.parse(filename)
-        root = self.__template.getroot()
-        for child in root:
-            self.dispatch('parse', child.tag, node=child)
+        docNode = lxml.html.soupparser.parse(filename).getroot()
+        for storeSection in self.__storeSectionList:
+            result = storeSection.extract(docNode)
+            if result:
+                return result
+        else:
+            print 'extract failed'
 
     def parseName(self, node):
         self.__data.setName(node.text)
@@ -47,24 +90,15 @@ class Extractor(utils.Dispatcher):
         """对storeList中的每个section进行迭代,获得抽取信息
         :param node:
         """
-        for storeSection in node.findall('storeSection'):
-            # 获取selector
-            selector = utils.Selector(node.find('selector'))
-            # 根据selector得到满足条件的元素集合
-            elementList = selector.selectNode(self.__html)
-            for storeNode in storeSection.findall('storeNode'):
-                # 获取selector
-                selector = utils.Selector(storeNode.find('selector'))
-                # 根据selector，从上面的elementList中找到满足条件的元素集合
-                targetList = [selector.selectNode(element) for element in elementList]
-                # 从targetList中抽取内容，存入resultList
-                pass
-
-            pass
+        self.__storeSectionList = [StoreSection(storeSection) for storeSection in node.findall('storeSection')]
 
     def defaultParse(self, node):
         print node.tag + ': pass'
 
 
-extractor = Extractor('temp.xml')
-extractor.extract('test')
+extractor = Extractor('163.xml')
+for key, value in extractor.extract('163utf8.html').items():
+    print key + ": "
+    for node in value:
+        print node
+    print
