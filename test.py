@@ -15,6 +15,7 @@ class StoreNode(object):
     def __init__(self, node):
         # 获取selector
         self.__selector = utils.Selector(node.find('selector'))
+        self.__filter = utils.Filter(node.find('filter'))
 
         extractType = node.find('extractType')
         if extractType:
@@ -23,17 +24,23 @@ class StoreNode(object):
             self.__extractType = '.'
 
         self.__title = node.find('saveTitle').text
-        self.__allowNull = node.find('sectionAllowNull').text
+        self.__allowNull = node.find('allowNull').text
 
     def extract(self, docNode):
         elementList = self.__selector.selectNode(docNode)
         # 如果为.抽取文本，否则抽取对应的属性内容
-        resultList = []
+        textList = []
         if self.__extractType == '.':
-            resultList = [element.text for element in elementList if element.text is not None]
+            textList = [element.text for element in elementList if element.text]
         else:
-            resultList = [element.attrib[self.__extractType] for element in elementList if
-                          element.attrib[self.__extractType] is not None]
+            for element in elementList:
+                result = element.attrib[self.__extractType]
+                if result: textList.append(textList)
+        resultList = []
+        for text in textList:
+            result = self.__filter.filt(text)
+            if result: resultList += result
+
         # 判断是否允许为空，若不允许则引发一个异常，由section捕捉
         if not resultList and self.__allowNull == 'no':
             raise exceptions.NodeNullError
@@ -59,6 +66,7 @@ class StoreSection(object):
                     else:
                         resultMap[title] = resultList
         except exceptions.NodeNullError:
+            print 'Extract failed'
             return False
         return resultMap
 
@@ -75,10 +83,11 @@ class Extractor(utils.Dispatcher):
         docNode = lxml.html.soupparser.parse(filename).getroot()
         for storeSection in self.__storeSectionList:
             result = storeSection.extract(docNode)
-            if result:
+            if result:  # 表示抽取成功
+                # 写入data中
                 return result
         else:
-            print 'extract failed'
+            print 'Extract failed: ', filename
 
     def parseName(self, node):
         self.__data.setName(node.text)

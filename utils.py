@@ -1,5 +1,6 @@
 # coding=utf-8
 from lxml.cssselect import CSSSelector
+import re
 
 
 class Dispatcher(object):
@@ -53,19 +54,13 @@ class Selector(Dispatcher):
         for selector in self.__selectList:
             result = self.__selectNode(node, **selector)
             if result:
-                resultList += self.__selectNode(node, **selector)
+                resultList += result
         return resultList
 
     def __selectNode(self, node, identificationType, identificationValue):
         return self.dispatch('parse', identificationType, node=node, value=identificationValue)
 
     def parseQuery(self, node, value):
-        """
-        使用css解析
-        :param node:
-        :param value:
-        :return:
-        """
         return self.parseCss(node, value)
 
     def parseCss(self, node, value):
@@ -74,3 +69,37 @@ class Selector(Dispatcher):
 
     def parseXpath(self, node, value):
         return node.xpath(value)
+
+
+class Filter(Dispatcher):
+    def __init__(self, filterNode):
+        self.__filterList = []
+        #若为空，则生成默认filter
+        if not filterNode:
+            self.__filterList.append({'filtType':'.'})
+        else:
+            for filt in filterNode.findall('filt'):
+                filtNode = {}
+                for child in filt:
+                    filtNode[child.tag] = child.text
+                self.__filterList.append(filtNode)
+
+    def filt(self, text):
+        resultList = []
+        for filter in self.__filterList:
+            result = self.__filtText(text, **filter)
+            if result:
+                resultList += result
+        return resultList
+
+    def __filtText(self, text, filtType, filtValue='.+'):
+        if filtType == '.':
+            return [text]
+        else:
+            return self.dispatch('filt', filtType, value=filtValue, text=text)
+
+    def filtRegex(self, text, value='.+'):
+        return re.findall(value, text)
+
+    def defaultFilt(self,text,value=None):
+        return [text]

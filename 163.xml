@@ -5,53 +5,53 @@
 	<tableName>T_GEIS_NEWS_PRETREAT</tableName>
 	<language>2</language>
 	<pageEncode>UTF-8</pageEncode>
-	<storeList><!--解析需要保存的内容 -->				
+	<storeList><!--解析需要保存的内容 -->
 		<storeSection>
 			<selector>
 				<select>
-					<identificationType>query</identificationType>
-					<identificationValue>body</identificationValue>
+					<selectType>query</selectType>
+					<selectValue>body</selectValue>
 				</select>
 			</selector>
-			<lengthJudge></lengthJudge>
 			<storeNode><!-- title -->
 				<selector>
 					<select>
-						<identificationType>query</identificationType>
-						<identificationValue>#h1title</identificationValue>
-					</select>							
+						<selectType>query</selectType>
+						<selectValue>#h1title</selectValue>
+					</select>
 				</selector>
 				<extractType>.</extractType><!-- 表示要抽取的内容的类型 -->
 				<saveTitle>title</saveTitle>
-				<sectionAllowNull>no</sectionAllowNull>
-				<storePosition>.</storePosition>
+				<allowNull>no</allowNull>
 			</storeNode>
 			<storeNode><!-- createdate -->
 				<selector>
 					<select>
-						<identificationType>query</identificationType>
-						<identificationValue>div.ep-time-soure.cDGray</identificationValue>	
-						<!-- /html/body/div[@class="wrapper"]/div[@class="col_w660"]/div[@class="cnt_bd"]/div/span[@class="info"]/i/text() -->
+						<selectType>query</selectType>
+						<selectValue>div.ep-time-soure.cDGray</selectValue>	
 					</select>
 				</selector>
+				<filter>
+					<filt>
+						<filtType>regex</filtType>
+						<filtValue>\d+-\d+-\d+</filtValue>
+					</filt>
+				</filter>
 				<saveTitle>createdate</saveTitle>
-				<sectionAllowNull>yes</sectionAllowNull>
-				<storePosition>regex</storePosition>
-				<storePositionValue>\d+/\d+/\d+</storePositionValue>
+				<allowNull>yes</allowNull>
 			</storeNode>
 			<storeNode><!-- content -->
 				<selector>
 					<select>
-						<identificationType>query</identificationType>
-						<identificationValue>#endText > p</identificationValue>
+						<selectType>query</selectType>
+						<selectValue>#endText > p</selectValue>
 					</select>
 				</selector>
 				<saveTitle>content</saveTitle>
-				<sectionAllowNull>no</sectionAllowNull>
-				<storePosition>.</storePosition>
+				<allowNull>no</allowNull>
 			</storeNode>
 			
 		</storeSection>
 		
-	</storeList>						
+	</storeList>
 </PageConfiguration>
