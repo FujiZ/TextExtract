@@ -7,15 +7,16 @@ except ImportError:
 
 import lxml.etree
 import lxml.html.soupparser
-import utils
-import exceptions
+import Utils
+import Selector
+import Filter
 
 
 class StoreNode(object):
     def __init__(self, node):
         # 获取selector
-        self.__selector = utils.Selector(node.find('selector'))
-        self.__filter = utils.Filter(node.find('filter'))
+        self.__selector = Selector.Selector(node.find('selector'))
+        self.__filter = Filter.Filter(node.find('filter'))
 
         extractType = node.find('extractType')
         if extractType:
@@ -27,34 +28,31 @@ class StoreNode(object):
         self.__allowNull = node.find('allowNull').text
 
     def extract(self, docNode):
-        elementList = self.__selector.selectNode(docNode)
+        def getAttr(element):
+            if self.__extractType == '.':
+                return element.text
+            else:
+                return element.attrib[self.__extractType]
+
+        elementList = self.__selector.__call__(docNode)
         # 如果为.抽取文本，否则抽取对应的属性内容
-        textList = []
-        if self.__extractType == '.':
-            textList = [element.text for element in elementList if element.text]
-        else:
-            for element in elementList:
-                result = element.attrib[self.__extractType]
-                if result: textList.append(textList)
-        resultList = []
-        for text in textList:
-            result = self.__filter.filt(text)
-            if result: resultList += result
+        resultList = filter(None, map(getAttr, elementList))
+        resultList = Utils.mapList(self.__filter.filt, resultList)
 
         # 判断是否允许为空，若不允许则引发一个异常，由section捕捉
         if not resultList and self.__allowNull == 'no':
-            raise exceptions.NodeNullError
+            raise Utils.NodeNullError
         return self.__title, resultList
 
 
 class StoreSection(object):
     def __init__(self, node):
         # 获取selector
-        self.__selector = utils.Selector(node.find('selector'))
+        self.__selector = Selector.Selector(node.find('selector'))
         self.__storeNodeList = [StoreNode(storeNode) for storeNode in node.findall('storeNode')]
 
     def extract(self, docNode):
-        elementList = self.__selector.selectNode(docNode)
+        elementList = self.__selector(docNode)
         # 通过resultMap存储结果
         resultMap = {}
         try:
@@ -65,17 +63,19 @@ class StoreSection(object):
                         resultMap[title] += resultList
                     else:
                         resultMap[title] = resultList
-        except exceptions.NodeNullError:
+        except Utils.NodeNullError:
             print 'Extract failed'
             return False
+        except Exception:
+            raise
         return resultMap
 
 
-class Extractor(utils.Dispatcher):
+class Extractor(Utils.Dispatcher):
     def __init__(self, template):
         self.__template = ET.ElementTree(file=template).getroot()
         self.__storeSectionList = None
-        self.__data = utils.Data()
+        self.__data = Utils.Data()
         for child in self.__template:
             self.dispatch('parse', child.tag, node=child)
 
@@ -106,7 +106,7 @@ class Extractor(utils.Dispatcher):
 
 
 extractor = Extractor('163.xml')
-for key, value in extractor.extract('163utf8.html').items():
+for key, value in extractor.extract('163.html').items():
     print key + ": "
     for node in value:
         print node
