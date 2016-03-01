@@ -99,14 +99,14 @@ class Extractor(Utils.Dispatcher):
         """对storeList中的每个section进行迭代,获得抽取信息
         :param node:
         """
-        self.__storeSectionList = [StoreSection(storeSection) for storeSection in node.findall('storeSection')]
+        self.__storeSectionList = map(StoreSection, node.findall('storeSection'))
 
     def defaultParse(self, node):
         print node.tag + ': pass'
 
 
-extractor = Extractor('163.xml')
-for key, value in extractor.extract('163.html').items():
+extractor = Extractor('test/163.xml')
+for key, value in extractor.extract('test/163utf8.html').items():
     print key + ": "
     for node in value:
         print node
