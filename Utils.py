@@ -1,5 +1,6 @@
 # coding=utf-8
-from bs4 import UnicodeDammit
+import lxml.html.soupparser
+import re
 
 
 def mapList(func, sequence):
@@ -41,11 +42,18 @@ class Data(object):
         self.__data[key] = value
 
 
-def decode_html(html_string):
-    converted = UnicodeDammit(html_string)
-    if not converted.unicode_markup:
-        raise UnicodeDecodeError(
-            "Failed to detect encoding, tried [%s]",
-            ', '.join(converted.tried_encodings))
-    # print converted.original_encoding
-    return converted.unicode_markup
+def decodeFile(filename, encoding):
+    fileStr = open(filename).read()
+    try:
+        resultStr = fileStr.decode(encoding)
+    except UnicodeDecodeError:
+        print 'decode failed. try to read encoding info from file'
+        docNode = lxml.html.soupparser.fromstring(fileStr)
+        contentList = docNode.xpath("//meta[@http-equiv='Content-Type']")
+        if contentList:
+            content = contentList[0].attrib['content']
+        else:
+            raise
+        encoding = re.search(r'charset=([^ ]*)', content).group(1)
+        resultStr = fileStr.decode(encoding)
+    return resultStr

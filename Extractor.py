@@ -76,11 +76,14 @@ class Extractor(Utils.Dispatcher):
         self.__template = ET.ElementTree(file=template).getroot()
         self.__storeSectionList = None
         self.__data = Utils.Data()
+        self.__encode = 'utf-8'  # 默认为UTF-8编码
         for child in self.__template:
             self.dispatch('parse', child.tag, node=child)
 
     def extract(self, filename):
-        docNode = lxml.html.soupparser.parse(filename).getroot()
+        # decode
+        fileStr = Utils.decodeFile(filename, self.__encode)
+        docNode = lxml.html.soupparser.fromstring(fileStr)
         for storeSection in self.__storeSectionList:
             result = storeSection.extract(docNode)
             if result:  # 表示抽取成功
@@ -101,13 +104,17 @@ class Extractor(Utils.Dispatcher):
         """
         self.__storeSectionList = map(StoreSection, node.findall('storeSection'))
 
+    def parsePageencode(self, node):
+        self.__encode = node.text
+
     def defaultParse(self, node):
         print node.tag + ': pass'
 
 
-extractor = Extractor('test/163.xml')
-for key, value in extractor.extract('test/163utf8.html').items():
-    print key + ": "
-    for node in value:
-        print node
-    print
+if __name__ == "__main__":
+    extractor = Extractor('test/163.xml')
+    for key, value in extractor.extract('test/163_2.html').items():
+        print key + ": "
+        for node in value:
+            print node
+        print

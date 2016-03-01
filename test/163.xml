@@ -4,7 +4,7 @@
 	<sourceId>1536</sourceId>
 	<tableName>T_GEIS_NEWS_PRETREAT</tableName>
 	<language>2</language>
-	<pageEncode>UTF-8</pageEncode>
+	<pageEncode> gbk </pageEncode>
 	<storeList><!--解析需要保存的内容 -->
 		<storeSection>
 			<selector>
