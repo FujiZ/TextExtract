@@ -1,4 +1,4 @@
-#TextExtract in Python
+#TextExtractor in Python
 文本抽取器的python实现，通过配置xml模板实现对网页内容的自动抽取
 
 ##Dependencies
